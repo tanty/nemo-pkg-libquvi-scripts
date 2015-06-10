@@ -1,11 +1,12 @@
 Name:           libquvi-scripts
-Version:        0.4.9
+Version:        0.9.0
 Release:        1
 Summary:        Library for parsing video download links (Lua scripts)
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://quvi.sourceforge.net/
 Source0:        http://heanet.dl.sourceforge.net/project/quvi/0.4/%{name}/%{name}-%{version}.tar.xz
+Patch0:         do-not-dist-man.patch
 
 %description
  Library to parse Adobe flash video download links. It supports Youtube
@@ -26,11 +27,13 @@ developing applications that use %{name}.
 %prep
 %setup -q -n %{name}-%{version}/%{name}
 
+%patch0 -p1
+
 %build
-%autogen 
-%configure --disable-static
-./gen-ver.sh > VERSION
-cp VERSION share/lua/version
+echo v%{version} > VERSION
+./bootstrap.sh
+%configure --without-manual --disable-static
+cp VERSION share/version
 touch ChangeLog
 make %{?jobs:-j%jobs} dist
 make %{?jobs:-j%jobs}
@@ -48,5 +51,4 @@ rm -rf %{buildroot}
 /usr/share/libquvi-scripts/*
 
 %files devel
-%{_libdir}/pkgconfig/%{name}.pc
-%{_mandir}/man7/libquvi-scripts.7.gz
+%{_libdir}/pkgconfig/%{name}-0.9.pc

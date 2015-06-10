@@ -1,0 +1,32 @@
+diff --git a/Makefile.am b/Makefile.am
+index 2dce7c4..8a6f98b 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2,9 +2,7 @@ ACLOCAL_AMFLAGS=-I m4
+ EXTRA_DIST=	gen-ver.sh libquvi-scripts-0.9.pc.in VERSION
+ 
+ SUBDIRS=	share
+-if WITH_MANUAL
+-SUBDIRS+=	doc
+-endif
++SUBDIRS+=	$(MAYBE_DOC)
+ 
+ pkgconfigdir=	$(libdir)/pkgconfig
+ pkgconfig_DATA=	libquvi-scripts-0.9.pc
+diff --git a/configure.ac b/configure.ac
+index cff060d..97eb5da 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -76,6 +76,12 @@ AC_ARG_WITH([manual],
+     [Install manual page(s) @<:@default=yes@:>@])],
+   [], [with_manual=yes])
+ AM_CONDITIONAL([WITH_MANUAL], [test x"$with_manual" != "xno"])
++if test x"$with_manual" != "xno"; then
++  MAYBE_DOC=doc
++else
++  MAYBE_DOC=
++fi
++AC_SUBST([MAYBE_DOC])
+ 
+ # Version: Major/minor -pair, used to symlink
+ # from
